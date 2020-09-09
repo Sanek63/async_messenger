@@ -28,12 +28,11 @@ def status():
 def send():
     data = request.json
 
-    timestamp = time.time()
     db.append({
         'id': len(db),
         'name': data['name'],
         'text': data['text'],
-        'time': timestamp
+        'timestamp': time.time()
     })
     return {"ok": True}
 
@@ -41,7 +40,7 @@ def send():
 @app.route('/messages')
 def messages():
     if 'after_id' in request.args:
-        after_id = int(request.args['after_id'])
+        after_id = int(request.args['after_id']) + 1
     else:
         after_id = 0
     return {'messages': db[after_id:]}
