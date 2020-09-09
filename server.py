@@ -40,7 +40,11 @@ def send():
 
 @app.route('/messages')
 def messages():
-    return {'messages': db}
+    if 'after_id' in request.args:
+        after_id = int(request.args['after_id'])
+    else:
+        after_id = 0
+    return {'messages': db[after_id:]}
 
 
 app.run()
