@@ -17,10 +17,9 @@ def status():
     return {
         "status": True,
         "name": "Messenger",
-        "time0": dn,
-        "time1": time.asctime(),
-        "time2": dn.isoformat(),
-        "time3": dn.strftime("%d.%m.%Y %H:%M:%S")
+        "time": dn.strftime("%d.%m.%Y %H:%M:%S"),
+        "messages_count": len(db),
+        "user_count": len(set([message['name'] for message in db]))
     }
 
 
@@ -39,11 +38,19 @@ def send():
 
 @app.route('/messages')
 def messages():
-    if 'after_id' in request.args:
-        after_id = int(request.args['after_id']) + 1
+    if 'after_timestamp' in request.args:
+        after_timestamp = float(request.args['after_timestamp'])
     else:
-        after_id = 0
-    return {'messages': db[after_id:]}
+        after_timestamp = 0
+
+    max_limit = 5
+
+    after_id = 0
+    for message in db:
+        if message['timestamp'] > after_timestamp:
+            break
+        after_id += 1
+    return {'messages': db[after_id: after_id + max_limit]}
 
 
 app.run()
