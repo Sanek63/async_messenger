@@ -58,7 +58,6 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
         while self.update_messages():
             pass
 
-
     def button_pressed(self):
         name = self.inputNamePanel.toPlainText()
         text = self.sendMessagePanel.toPlainText()
@@ -79,7 +78,8 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
             self.chat_label.append('При отправке произошла ошибка')
             self.chat_label.append('')
 
+
 app = QtWidgets.QApplication([])
-window = Messenger('http://127.0.0.1:5000')
+window = Messenger('http://6c0326051e48.ngrok.io')
 window.show()
 app.exec_()
