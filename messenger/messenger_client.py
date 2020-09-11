@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 from PyQt5 import QtWidgets, QtCore
 
-from clientui import Ui_MainWindow
+from messenger.clientui import Ui_MainWindow
 
 
 class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -23,11 +23,12 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
         self.timer.start(1000)
 
     def pretty_print(self, message):
-        '''
+        """
         2020/09/09 10:00:23  Nick
         Text
 
-        '''
+        """
+
         dt = datetime.fromtimestamp(message['timestamp'])
         dt = dt.strftime('%Y/%m/%d %H:%M:%S')
         first_line = dt + '  ' + message['name']
