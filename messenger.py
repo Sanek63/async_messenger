@@ -80,6 +80,6 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 app = QtWidgets.QApplication([])
-window = Messenger('http://6c0326051e48.ngrok.io')
+window = Messenger('http://127.0.0.1:5000')
 window.show()
 app.exec_()
