@@ -119,6 +119,20 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
         self.login_button.clicked.connect(self.login_check)
         self.signup_button.clicked.connect(self.signup_check)
 
+    def show_message_box(self, title, message):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setWindowTitle(title)
+        msgBox.setText(message)
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
+
+    def welcomeWindowShow(self, username):
+        pass
+
+    def signUpShow(self):
+        pass
+
     def login_check(self):
         pass
 
