@@ -109,6 +109,6 @@ class Dialog(QDialog, Ui_signup_panel):
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
-    w = Dialog(url='http://127.0.0.1:5000')
+    w = Dialog(url='http://459df9beef45.ngrok.io')
     w.show()
     sys.exit(app.exec_())

@@ -132,6 +132,6 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
 if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
-    w = MainLoginPanel(url='http://127.0.0.1:5000')
+    w = MainLoginPanel(url='http://459df9beef45.ngrok.io')
     w.show()
     sys.exit(app.exec_())
