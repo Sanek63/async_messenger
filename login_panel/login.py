@@ -52,9 +52,9 @@ class Ui_Login_Panel(object):
         self.login_line = QtWidgets.QLineEdit(Login_Panel)
         self.login_line.setGeometry(QtCore.QRect(180, 80, 181, 41))
         self.login_line.setObjectName("login_line")
-        self.login_line_2 = QtWidgets.QLineEdit(Login_Panel)
-        self.login_line_2.setGeometry(QtCore.QRect(180, 140, 181, 41))
-        self.login_line_2.setObjectName("login_line_2")
+        self.pass_line = QtWidgets.QLineEdit(Login_Panel)
+        self.pass_line.setGeometry(QtCore.QRect(180, 140, 181, 41))
+        self.pass_line.setObjectName("login_line_2")
         self.login_button = QtWidgets.QPushButton(Login_Panel)
         self.login_button.setGeometry(QtCore.QRect(80, 210, 88, 34))
         self.login_button.setObjectName("login_button")
@@ -134,7 +134,28 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
         pass
 
     def login_check(self):
-        pass
+        username = self.login_line.text()
+        password = self.pass_line.text()
+
+        if(not username) or (not password):
+            msg = QMessageBox.information(self, 'Внимание!', "Вы заполнили не все поля")
+            return
+
+        query = "SELECT * FROM users WHERE username = '{}' AND password = '{}'".format(
+            username, password
+        )
+        cursor = self.login_database.conn.cursor()
+        cursor.execute(query)
+
+        result = bool(cursor.rowcount)
+
+        if result:
+            self.welcomeWindowShow(username)
+            self.hide()
+            self.login_database.conn.cursor().close()
+        else:
+            self.show_message_box('Внимание','Неправильное имя или пароль.')
+
 
     def signup_check(self):
         pass
