@@ -7,7 +7,7 @@ from messenger.client_ui import Ui_MainWindow
 
 
 class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self, url):
+    def __init__(self, url, name):
         super().__init__()
         self.setupUi(self)
 
@@ -15,7 +15,7 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
         self.after_timestamp = 0
 
         self.sendMessageButton.pressed.connect(self.button_pressed)
-
+        self.inputNamePanel.setText(name)
         self.load_messages()
 
         self.timer = QtCore.QTimer()
@@ -60,7 +60,7 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
             pass
 
     def button_pressed(self):
-        name = self.inputNamePanel.toPlainText()
+        name = self.inputNamePanel.text()
         text = self.sendMessagePanel.toPlainText()
         data = {'name': name, 'text': text}
 
@@ -80,7 +80,8 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
             self.chat_label.append('')
 
 
-app = QtWidgets.QApplication([])
-window = Messenger('http://127.0.0.1:5000')
-window.show()
-app.exec_()
+if __name__ == '__main__':
+    app = QtWidgets.QApplication([])
+    window = Messenger('http://127.0.0.1:5000', 'admin')
+    window.show()
+    app.exec_()

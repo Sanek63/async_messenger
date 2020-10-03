@@ -10,7 +10,6 @@ import psycopg2
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 
-from login_panel.login import Login_Database
 
 class Ui_signup_panel(object):
     def setupUi(self, signup_panel):
@@ -78,9 +77,13 @@ class Dialog(QDialog, Ui_signup_panel):
 
         self.signup_button.clicked.connect(self.insertData)
 
-        self.login_database = Login_Database('users_messenger')
-        self.cursor = self.login_database.conn.cursor()
-        self.conn = self.login_database.conn
+        self.conn = psycopg2.connect(
+            host="127.0.0.1",
+            database='users_messenger',
+            user="postgres",
+            password="postgres"
+        )
+        self.cursor = self.conn.cursor()
 
     @pyqtSlot()
     def insertData(self):

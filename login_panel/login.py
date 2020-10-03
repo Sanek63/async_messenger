@@ -11,6 +11,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 
+from signup_panel.signup import Dialog
+from welcome_panel.welcome import MainWindow
+from messenger.messenger_client import Messenger
+
 import psycopg2
 
 
@@ -100,9 +104,10 @@ class Login_Database():
 
 class MainLoginPanel(QDialog, Ui_Login_Panel):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, url='http://127.0.0.1:5000'):
         super(MainLoginPanel, self).__init__(parent)
         self.setupUi(self)
+        self.url = url
 
         self.login_database = Login_Database('users_messenger')
         cursor = self.login_database.conn.cursor()
@@ -128,10 +133,12 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
         msgBox.exec_()
 
     def welcomeWindowShow(self, username):
-        pass
+        self.welcomeWindow = MainWindow(username)
+        self.welcomeWindow.show()
 
     def signUpShow(self):
-        self.signUpWindow = Main
+        self.signUpWindow = Dialog(self)
+        self.signUpWindow.show()
 
     def login_check(self):
         username = self.login_line.text()
@@ -153,6 +160,8 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
             self.welcomeWindowShow(username)
             self.hide()
             self.login_database.conn.cursor().close()
+            self.window = Messenger(self.url, username)
+            self.window.show()
         else:
             self.show_message_box('Внимание','Неправильное имя или пароль.')
 
@@ -163,8 +172,7 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
 
 if __name__ == '__main__':
     import sys
-
     app = QApplication(sys.argv)
-    w = MainLoginPanel()
+    w = MainLoginPanel(url='http://127.0.0.1:5000')
     w.show()
     sys.exit(app.exec_())
