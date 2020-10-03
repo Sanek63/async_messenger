@@ -82,6 +82,6 @@ class Messenger(QtWidgets.QMainWindow, Ui_MainWindow):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
-    window = Messenger('http://459df9beef45.ngrok.io', 'admin')
+    window = Messenger('http://127.0.0.1:5000', 'admin')
     window.show()
     app.exec_()
