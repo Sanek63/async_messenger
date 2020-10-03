@@ -131,7 +131,7 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
         pass
 
     def signUpShow(self):
-        pass
+        self.signUpWindow = Main
 
     def login_check(self):
         username = self.login_line.text()
@@ -158,7 +158,7 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
 
 
     def signup_check(self):
-        pass
+        self.signUpShow()
 
 
 if __name__ == '__main__':
