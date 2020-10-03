@@ -10,6 +10,8 @@ import psycopg2
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.Qt import *
 
+import requests
+
 
 class Ui_signup_panel(object):
     def setupUi(self, signup_panel):
@@ -70,10 +72,11 @@ class Ui_signup_panel(object):
 
 class Dialog(QDialog, Ui_signup_panel):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, url='http://127.0.0.1:5000'):
         super(Dialog, self).__init__(parent)
         self.setupUi(self)
         self.parent = parent
+        self.url = url
 
         self.signup_button.clicked.connect(self.insertData)
 
@@ -94,27 +97,18 @@ class Dialog(QDialog, Ui_signup_panel):
             msg = QMessageBox.information(self, 'Внимание!', 'Вы заполнили не все поля')
             return
 
-        cursor = self.cursor
-        conn = self.conn
+        response = requests.post(self.url + '/registration', json={'username': username, 'password': password})
+        result = response.json()
 
-        query = "SELECT * FROM users WHERE username = '{}'".format(username)
-
-        cursor.execute(query)
-
-        result = bool(cursor.rowcount)
-
-        if result:
+        if result['is_exist']:
             msg = QMessageBox.information(self, 'Внимание!', 'Пользователь с таким именем уже зарегистрирован')
         else:
-            query = "INSERT INTO users VALUES ('{}','{}')".format(username, password)
-            cursor.execute(query)
-            conn.commit()
             self.close()
 
 
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
-    w = Dialog()
+    w = Dialog(url='http://127.0.0.1:5000')
     w.show()
     sys.exit(app.exec_())
