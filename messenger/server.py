@@ -1,19 +1,12 @@
 import time
 from datetime import datetime
 
-import psycopg2
 from flask import Flask, request
+
+from database.login import Login_Database
 
 app = Flask(__name__)
 db = []
-
-conn = psycopg2.connect(
-            host="127.0.0.1",
-            database='users_messenger',
-            user="postgres",
-            password="postgres"
-        )
-cursor = conn.cursor()
 
 
 @app.route('/')
@@ -71,9 +64,7 @@ def registration_user():
     password = args['password']
 
     query = "SELECT * FROM users WHERE username = '{}'".format(args['username'])
-
     cursor.execute(query)
-
     result = bool(cursor.rowcount)
 
     if result:
@@ -82,7 +73,28 @@ def registration_user():
         query = "INSERT INTO users VALUES ('{}','{}')".format(username, password)
         cursor.execute(query)
         conn.commit()
-        print('прошел')
         return {'is_exist': False}
 
-app.run()
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+
+    username = data['username']
+    password = data['password']
+
+    query = "SELECT * FROM users WHERE username = '{}' AND password = '{}'".format(
+        username, password
+    )
+
+    cursor.execute(query)
+    result = bool(cursor.rowcount)
+
+    return {'is_logged': result}
+
+if __name__ == '__main__':
+    login_database = Login_Database('users_messenger')
+    cursor = login_database.conn.cursor()
+    conn = login_database.conn
+
+    app.run()

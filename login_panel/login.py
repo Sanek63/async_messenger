@@ -15,7 +15,7 @@ from signup_panel.signup import Dialog
 from welcome_panel.welcome import MainWindow
 from messenger.messenger_client import Messenger
 
-import psycopg2
+import requests
 
 
 class Ui_Login_Panel(object):
@@ -79,47 +79,12 @@ class Ui_Login_Panel(object):
         self.signup_button.setText(_translate("Login_Panel", "signup"))
 
 
-class Login_Database():
-
-    def __init__(self, name):
-        self.dbname = name
-
-        # connect to the bd
-        self.conn = psycopg2.connect(
-            host="127.0.0.1",
-            database=self.dbname,
-            user="postgres",
-            password="postgres"
-        )
-
-    # checking for table avail
-    def is_table(self, table_name):
-        query = "SELECT * from information_schema.tables WHERE table_name='{}';".format(table_name)
-        cur = self.conn.cursor()
-        cur.execute(query)
-        result = bool(cur.rowcount)
-
-        return result
-
-
 class MainLoginPanel(QDialog, Ui_Login_Panel):
 
     def __init__(self, parent=None, url='http://127.0.0.1:5000'):
         super(MainLoginPanel, self).__init__(parent)
         self.setupUi(self)
         self.url = url
-
-        self.login_database = Login_Database('users_messenger')
-        cursor = self.login_database.conn.cursor()
-        conn = self.login_database.conn
-
-        if self.login_database.is_table('users'):
-            pass
-        else:
-            cursor.execute("CREATE TABLE users(username VARCHAR(30) NOT NULL, password VARCHAR(20))")
-            cursor.execute("INSERT INTO users VALUES('username', 'password')", ('admin', 'admin'))
-            conn.commit()
-            cursor.close()
 
         self.login_button.clicked.connect(self.login_check)
         self.signup_button.clicked.connect(self.signup_check)
@@ -148,18 +113,12 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
             msg = QMessageBox.information(self, 'Внимание!', "Вы заполнили не все поля")
             return
 
-        query = "SELECT * FROM users WHERE username = '{}' AND password = '{}'".format(
-            username, password
-        )
-        cursor = self.login_database.conn.cursor()
-        cursor.execute(query)
+        response = requests.post(self.url + '/login', json={'username': username, 'password': password})
+        result = response.json()
 
-        result = bool(cursor.rowcount)
-
-        if result:
+        if result['is_logged']:
             self.welcomeWindowShow(username)
             self.hide()
-            self.login_database.conn.cursor().close()
             self.window = Messenger(self.url, username)
             self.window.show()
         else:
