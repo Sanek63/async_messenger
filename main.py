@@ -92,7 +92,7 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
         self.welcomeWindow.show()
 
     def signUpShow(self):
-        self.signUpWindow = Dialog(self)
+        self.signUpWindow = Dialog(self, url=self.url)
         self.signUpWindow.show()
 
     def login_check(self):
@@ -113,7 +113,6 @@ class MainLoginPanel(QDialog, Ui_Login_Panel):
             self.window.show()
         else:
             self.show_message_box('Внимание','Неправильное имя или пароль.')
-
 
     def signup_check(self):
         self.signUpShow()
